@@ -70,7 +70,7 @@ const Welcome = () => {
     const subtitleCleanup = setupTextHover(subtitleRef.current, "subtitle");
 
     return () => {
-      titleCleanup && titleCleanup();     // ✅ safe cleanup
+      titleCleanup && titleCleanup();   
       subtitleCleanup && subtitleCleanup();
     };
   }, []);
@@ -78,7 +78,7 @@ const Welcome = () => {
   return (
     <section id="welcome">
       <p ref={subtitleRef}>
-        {renderText("Made by", "text-3xl font-georama", 100)} {/* ✅ fixed typo */}
+        {renderText("Made by", "text-3xl font-georama", 100)} 
       </p>
 
       <h1 ref={titleRef} className="mt-7">
