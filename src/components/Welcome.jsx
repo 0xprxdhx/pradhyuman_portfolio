@@ -1,5 +1,6 @@
 import { useRef } from "react";
-import { gsap } from "gsap"; // ✅ added
+import { gsap } from "gsap";
+import { useGSAP } from "@gsap/react";
 
 const FONT_WEIGHT = {
   subtitle: { min: 100, max: 400, default: 100 },
@@ -69,7 +70,7 @@ const Welcome = () => {
     const subtitleCleanup = setupTextHover(subtitleRef.current, "subtitle");
 
     return () => {
-      titleCleanup && titleCleanup();     // ✅ safe cleanup
+      titleCleanup && titleCleanup();   
       subtitleCleanup && subtitleCleanup();
     };
   }, []);
@@ -77,11 +78,11 @@ const Welcome = () => {
   return (
     <section id="welcome">
       <p ref={subtitleRef}>
-        {renderText("Made bye", "text-3xl font-georama", 100)} {/* ✅ fixed typo */}
+        {renderText("Made by", "text-3xl font-georama", 100)} 
       </p>
 
       <h1 ref={titleRef} className="mt-7">
-        {renderText("Pradhyuman", "text-9xl italic font-georama")}
+        {renderText("Pradhyuman", "text-9xl italic font-georama", 400)}
       </h1>
 
       <div className="small-screen">
