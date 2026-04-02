@@ -10,7 +10,7 @@ const FONT_WEIGHT = {
 const renderText = (text, className, baseWeight = 400) => {
   return [...text].map((char, i) => (
     <span
-      key={i}
+      key={`${char}-${i}`}
       className={className}
       style={{ fontVariationSettings: `'wght' ${baseWeight}` }}
     >
@@ -20,7 +20,7 @@ const renderText = (text, className, baseWeight = 400) => {
 };
 
 const setupTextHover = (container, type) => {
-  if (!container) return () => {}; // ✅ safe fallback
+  if (!container) return () => {};
 
   const letters = container.querySelectorAll("span");
   const { min, max, default: base } = FONT_WEIGHT[type];
@@ -47,9 +47,7 @@ const setupTextHover = (container, type) => {
   };
 
   const handleMouseLeave = () => {
-    letters.forEach((letter) =>
-      animateLetters(letter, base, 0.3) // ✅ fixed typo
-    );
+    letters.forEach((letter) => animateLetters(letter, base, 0.3));
   };
 
   container.addEventListener("mousemove", handleMouseMove);
@@ -70,25 +68,25 @@ const Welcome = () => {
     const subtitleCleanup = setupTextHover(subtitleRef.current, "subtitle");
 
     return () => {
-      titleCleanup && titleCleanup();   
-      subtitleCleanup && subtitleCleanup();
+      titleCleanup?.();
+      subtitleCleanup?.();
     };
   }, []);
 
   return (
     <section id="welcome">
       <p ref={subtitleRef}>
-        {renderText("Made by", "text-3xl font-georama", 100)} 
+        {renderText("Made by", "text-xl lg:text-2xl 3xl:text-3xl font-georama", 100)}
       </p>
 
       <h1 ref={titleRef} className="mt-7">
-        {renderText("Pradhyuman", "text-9xl italic font-georama", 400)}
+        {renderText("Pradhyuman", "text-6xl lg:text-8xl 3xl:text-9xl italic font-georama", 400)}
       </h1>
 
       <div className="small-screen">
         <p>
-          At present This portfolio is designed for Desktop/tablet screens only.
-          android version will be launched soon.
+          At present, this portfolio is designed for desktop/tablet screens
+          only. An Android version will be launched soon.
         </p>
       </div>
     </section>

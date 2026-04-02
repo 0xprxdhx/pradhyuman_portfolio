@@ -82,7 +82,7 @@ body {
     @apply absolute bottom-5 left-1/2 -translate-x-1/2 z-50 select-none max-sm:hidden;
 
     .dock-container {
-      @apply bg-white/20 backdrop-blur-md justify-between rounded-2xl p-1.5 flex items-end gap-1.5;
+      @apply bg-white/20 backdrop-blur-md justify-between rounded-2xl p-1 lg:p-1.5 flex items-end gap-1 lg:gap-1.5;
     }
 
     .tooltip {
@@ -90,7 +90,7 @@ body {
     }
 
     .dock-icon {
-      @apply size-14 3xl:size-20 cursor-pointer;
+      @apply size-10 lg:size-12 3xl:size-20 cursor-pointer;
 
       img {
         @apply object-cover object-center;
