@@ -2,6 +2,21 @@
 
 @import "tailwindcss";
 
+:root {
+  --kali-bg: #1a1b26;
+  --kali-panel: #13131a;
+  --kali-surface: #1e1f2e;
+  --kali-surface-2: #252635;
+  --kali-border: #2e2f45;
+  --kali-blue: #367bf0;
+  --kali-green: #00ff9c;
+  --kali-red: #f7768e;
+  --kali-yellow: #e0af68;
+  --kali-text: #c0caf5;
+  --kali-text-dim: #565f89;
+  --kali-terminal-green: #9ece6a;
+}
+
 html,
 body {
   width: 100dvw;
@@ -11,6 +26,7 @@ body {
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
+  background-color: var(--kali-bg);
 }
 
 @theme {
@@ -36,11 +52,14 @@ body {
     @apply w-dvw h-dvh overflow-hidden;
   }
 
+  /* Kali Linux Top Panel */
   nav {
-    @apply flex justify-between items-center bg-white/50 backdrop-blur-3xl p-2 px-5 select-none;
+    @apply flex justify-between items-center p-0 px-2 select-none h-7;
+    background-color: var(--kali-panel);
+    border-bottom: 1px solid var(--kali-border);
 
     div {
-      @apply flex items-center max-sm:w-full max-sm:justify-center gap-5;
+      @apply flex items-center max-sm:w-full max-sm:justify-center gap-1;
 
       &:last-child {
         @apply max-sm:hidden;
@@ -48,49 +67,77 @@ body {
     }
 
     ul {
-      @apply flex items-center gap-5 max-sm:hidden;
+      @apply flex items-center gap-0 max-sm:hidden;
 
       p {
-        @apply text-sm cursor-pointer hover:underline transition-all;
+        @apply text-xs cursor-pointer px-3 py-1 transition-all;
+        color: var(--kali-text);
+        font-family: var(--font-roboto);
+
+        &:hover {
+          background-color: var(--kali-blue);
+          color: white;
+        }
       }
     }
 
     time {
-      @apply text-sm font-medium text-black;
+      @apply text-xs font-medium px-2;
+      color: var(--kali-text);
+      font-family: var(--font-roboto);
     }
   }
 }
 
 @layer components {
   .icon {
-    @apply p-1 hover:bg-gray-200 rounded hover:cursor-default;
+    @apply p-1 rounded-none hover:cursor-default;
+    &:hover {
+      background-color: var(--kali-surface-2);
+    }
   }
 
   #welcome {
-    @apply text-gray-200 flex flex-col justify-center items-center absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 select-none max-sm:h-screen max-sm:w-full max-sm:px-10;
+    @apply flex flex-col justify-center items-center absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 select-none max-sm:h-screen max-sm:w-full max-sm:px-10;
+    color: var(--kali-text);
 
     .small-screen {
-      @apply sm:hidden m-7 bg-red-300/20 backdrop-blur-lg p-3 rounded-md absolute top-10;
+      @apply sm:hidden m-7 p-3 rounded-none absolute top-10;
+      background-color: var(--kali-surface);
+      border: 1px solid var(--kali-border);
 
       p {
-        @apply flex-1 text-[16px] text-center font-roboto text-gray-400;
+        @apply flex-1 text-[16px] text-center;
+        font-family: var(--font-roboto);
+        color: var(--kali-text-dim);
       }
     }
   }
 
+  /* Kali Linux Bottom Taskbar */
   #dock {
-    @apply absolute bottom-5 left-1/2 -translate-x-1/2 z-50 select-none max-sm:hidden;
+    @apply absolute bottom-0 left-0 w-full z-50 select-none max-sm:hidden;
 
     .dock-container {
-      @apply bg-white/20 backdrop-blur-md justify-between rounded-2xl p-1 lg:p-1.5 flex items-end gap-1 lg:gap-1.5;
+      @apply justify-start rounded-none p-0 px-1 flex items-center gap-0 h-10;
+      background-color: var(--kali-panel);
+      border-top: 1px solid var(--kali-border);
     }
 
     .tooltip {
-      @apply !py-1 !px-3 !w-fit !text-center !text-xs !rounded-md !bg-blue-200 !text-blue-900 !shadow-2xl;
+      @apply !py-1 !px-3 !w-fit !text-center !text-xs !rounded-none;
+      background-color: var(--kali-surface-2) !important;
+      color: var(--kali-text) !important;
+      border: 1px solid var(--kali-border) !important;
+      font-family: var(--font-roboto) !important;
     }
 
     .dock-icon {
-      @apply size-10 lg:size-12 3xl:size-20 cursor-pointer;
+      @apply size-8 cursor-pointer p-1;
+
+      &:hover {
+        background-color: var(--kali-surface-2);
+      }
 
       img {
         @apply object-cover object-center;
@@ -98,104 +145,146 @@ body {
     }
   }
 
+  /* Kali/GTK Window Controls */
   #window-controls {
-    @apply flex gap-2;
+    @apply flex gap-1.5;
 
     .close {
-      @apply size-3.5 rounded-full bg-[#ff6157] cursor-pointer;
+      @apply size-3 rounded-none cursor-pointer;
+      background-color: var(--kali-red);
+
+      &:hover {
+        filter: brightness(1.3);
+      }
     }
 
     .minimize {
-      @apply size-3.5 rounded-full bg-[#ffc030];
+      @apply size-3 rounded-none;
+      background-color: var(--kali-yellow);
     }
 
     .maximize {
-      @apply size-3.5 rounded-full bg-[#2acb42];
+      @apply size-3 rounded-none;
+      background-color: var(--kali-terminal-green);
     }
   }
 
+  /* GTK-style Window Header */
   #window-header {
-    @apply flex items-center justify-between px-4 py-3 rounded-t-lg bg-gray-50 border-b border-gray-200 select-none text-sm text-gray-400;
+    @apply flex items-center justify-between px-3 py-2 rounded-none border-b select-none text-xs;
+    background-color: var(--kali-surface-2);
+    border-color: var(--kali-border);
+    color: var(--kali-text);
+    font-family: var(--font-roboto);
   }
 
+  /* Safari / Browser Window */
   #safari {
-    @apply w-4xl absolute top-40 left-2/12 bg-white shadow-2xl drop-shadow-2xl rounded-xl overflow-hidden;
+    @apply w-4xl absolute top-40 left-2/12 shadow-2xl rounded-none overflow-hidden;
+    border: 1px solid var(--kali-border);
+    background-color: var(--kali-surface);
 
     .search {
-      @apply flex items-center gap-3 w-2/3 bg-white border border-gray-300 rounded-lg px-3 py-2;
+      @apply flex items-center gap-3 w-2/3 rounded-none px-3 py-1.5;
+      background-color: var(--kali-bg);
+      border: 1px solid var(--kali-border);
 
       input {
-        @apply placeholder:text-gray-400;
+        @apply placeholder:text-gray-600 text-xs;
+        color: var(--kali-text);
+        font-family: var(--font-roboto);
+        background: transparent;
       }
     }
 
     .blog {
-      @apply bg-white p-10 max-w-3xl mx-auto;
+      @apply p-10 max-w-3xl mx-auto;
+      background-color: var(--kali-surface);
 
       h2 {
-        @apply text-xl font-bold text-pink-600 mb-10;
+        @apply text-xl font-bold mb-10;
+        color: var(--kali-blue);
+        font-family: var(--font-roboto);
       }
 
       .blog-post {
         @apply grid grid-cols-12 space-x-5;
 
         img {
-          @apply size-full rounded-md object-cover;
+          @apply size-full rounded-none object-cover;
+          border: 1px solid var(--kali-border);
         }
 
         .content {
           @apply col-span-10 space-y-3;
 
           p {
-            @apply text-xs text-gray-500;
+            @apply text-xs;
+            color: var(--kali-text-dim);
           }
 
           h3 {
-            @apply font-semibold text-base text-gray-800;
+            @apply font-semibold text-base;
+            color: var(--kali-text);
           }
 
           a {
-            @apply text-blue-600 text-xs hover:underline flex items-center gap-3;
+            @apply text-xs hover:underline flex items-center gap-3;
+            color: var(--kali-blue);
           }
         }
       }
     }
   }
 
+  /* Terminal Window - Kali style */
   #terminal {
-    @apply w-xl absolute top-32 left-1/12 bg-white shadow-2xl drop-shadow-2xl rounded-xl overflow-hidden;
+    @apply w-xl absolute top-32 left-1/12 shadow-2xl rounded-none overflow-hidden;
+    border: 1px solid var(--kali-border);
+    background-color: #0d0e17;
 
     h2 {
       @apply font-bold text-sm text-center w-full;
+      color: var(--kali-text);
+      font-family: var(--font-roboto);
     }
 
     .techstack {
-      @apply text-sm font-roboto p-5;
+      @apply text-sm p-5;
+      font-family: var(--font-roboto);
+      color: var(--kali-terminal-green);
 
       .label {
         @apply flex items-center ms-10 mt-7;
+        color: var(--kali-text-dim);
       }
 
       .content {
-        @apply py-5 my-5 border-y border-dashed space-y-1;
+        @apply py-5 my-5 space-y-1;
+        border-top: 1px dashed var(--kali-border);
+        border-bottom: 1px dashed var(--kali-border);
 
         li {
           .check {
-            @apply text-[#00A154] w-5;
+            color: var(--kali-green);
+            @apply w-5;
           }
 
           h3 {
-            @apply font-semibold text-[#00A154] w-32 ms-5;
+            @apply font-semibold w-32 ms-5;
+            color: var(--kali-green);
           }
 
           ul {
             @apply flex items-center gap-3;
+            color: var(--kali-text);
           }
         }
       }
 
       .footnote {
-        @apply text-[#00A154] space-y-1;
+        @apply space-y-1;
+        color: var(--kali-terminal-green);
 
         p {
           @apply flex items-center;
@@ -208,22 +297,29 @@ body {
     }
   }
 
+  /* Contact Window */
   #contact {
-    @apply max-w-2xl absolute top-60 left-5/12 bg-white shadow-2xl drop-shadow-2xl rounded-xl overflow-hidden;
+    @apply max-w-2xl absolute top-60 left-5/12 shadow-2xl rounded-none overflow-hidden;
+    border: 1px solid var(--kali-border);
+    background-color: var(--kali-surface);
 
     h2 {
       @apply font-bold text-sm text-center w-full;
+      color: var(--kali-text);
+      font-family: var(--font-roboto);
     }
 
     h3 {
       @apply text-xl font-semibold;
+      color: var(--kali-text);
     }
 
     ul {
       @apply flex items-center gap-3;
 
       li {
-        @apply rounded-lg p-3 w-60 hover:-translate-y-0.5 hover:scale-105 origin-center transition-all duration-300;
+        @apply rounded-none p-3 w-60 hover:-translate-y-0.5 hover:scale-105 origin-center transition-all duration-300;
+        border: 1px solid var(--kali-border);
 
         a {
           @apply space-y-5;
@@ -231,27 +327,40 @@ body {
 
         p {
           @apply font-semibold text-sm text-white;
+          font-family: var(--font-roboto);
         }
       }
     }
   }
 
+  /* Photos Window */
   #photos {
-    @apply max-w-3xl absolute top-96 left-1/2 -translate-y-1/2 bg-white shadow-2xl drop-shadow-2xl rounded-xl overflow-hidden;
+    @apply max-w-3xl absolute top-96 left-1/2 -translate-y-1/2 shadow-2xl rounded-none overflow-hidden;
+    border: 1px solid var(--kali-border);
+    background-color: var(--kali-surface);
 
     .sidebar {
-      @apply w-3/12 flex-none bg-gray-50 border-r border-gray-200 flex flex-col p-5;
+      @apply w-3/12 flex-none flex flex-col p-5;
+      background-color: var(--kali-surface-2);
+      border-right: 1px solid var(--kali-border);
 
       h2 {
-        @apply text-xs font-medium text-gray-400 mb-1;
+        @apply text-xs font-medium mb-1;
+        color: var(--kali-text-dim);
+        font-family: var(--font-roboto);
       }
 
       ul {
         li {
-          @apply flex space-y-1 items-center gap-2 px-3 py-2 rounded-md cursor-pointer transition-colors;
+          @apply flex space-y-1 items-center gap-2 px-3 py-2 rounded-none cursor-pointer transition-colors;
 
           &:first-child {
-            @apply bg-blue-100 text-blue-700;
+            background-color: var(--kali-blue);
+            color: white;
+          }
+
+          &:hover:not(:first-child) {
+            background-color: var(--kali-surface);
           }
 
           img {
@@ -260,6 +369,8 @@ body {
 
           p {
             @apply text-sm font-medium;
+            color: var(--kali-text);
+            font-family: var(--font-roboto);
           }
         }
       }
@@ -273,7 +384,8 @@ body {
 
         li {
           img {
-            @apply size-full object-cover rounded-lg;
+            @apply size-full object-cover rounded-none;
+            border: 1px solid var(--kali-border);
           }
 
           &:first-child {
@@ -296,45 +408,63 @@ body {
     }
   }
 
+  /* Resume Window */
   #resume {
-    @apply w-fit h-fit absolute top-16 left-7/12 bg-white shadow-2xl drop-shadow-2xl rounded-xl overflow-hidden;
+    @apply w-fit h-fit absolute top-16 left-7/12 shadow-2xl rounded-none overflow-hidden;
+    border: 1px solid var(--kali-border);
+    background-color: var(--kali-surface);
 
     #window-header {
       h2 {
         @apply font-bold text-sm text-center flex-1;
+        font-family: var(--font-roboto);
       }
     }
   }
 
+  /* Finder Window */
   #finder {
-    @apply absolute w-3xl left-40 top-20 shadow-2xl drop-shadow-2xl overflow-hidden rounded-xl;
+    @apply absolute w-3xl left-40 top-20 shadow-2xl overflow-hidden rounded-none;
+    border: 1px solid var(--kali-border);
 
     .sidebar {
-      @apply w-48 bg-gray-50 border-r border-gray-200 flex flex-col p-5 space-y-3;
+      @apply w-48 flex flex-col p-5 space-y-3;
+      background-color: var(--kali-surface-2);
+      border-right: 1px solid var(--kali-border);
 
       h3 {
-        @apply text-xs font-medium text-gray-400 mb-1;
+        @apply text-xs font-medium mb-1;
+        color: var(--kali-text-dim);
+        font-family: var(--font-roboto);
       }
 
       ul {
         @apply space-y-1;
 
         .active {
-          @apply bg-blue-100 text-blue-700;
+          background-color: var(--kali-blue);
+          color: white;
         }
 
         .not-active {
-          @apply text-gray-700 hover:bg-gray-200;
+          color: var(--kali-text);
+
+          &:hover {
+            background-color: var(--kali-surface);
+          }
         }
 
         li {
-          @apply flex items-center gap-2 px-3 py-2 rounded-md cursor-pointer transition-colors;
+          @apply flex items-center gap-2 px-3 py-2 rounded-none cursor-pointer transition-colors;
+          font-family: var(--font-roboto);
+          font-size: 0.8rem;
         }
       }
     }
 
     .content {
-      @apply flex-1 p-8 bg-white max-w-2xl relative;
+      @apply flex-1 p-8 max-w-2xl relative;
+      background-color: var(--kali-surface);
 
       li {
         @apply absolute flex items-center flex-col gap-3;
@@ -345,30 +475,42 @@ body {
 
         p {
           @apply text-sm text-center font-medium w-40;
+          color: var(--kali-text);
+          font-family: var(--font-roboto);
         }
       }
     }
   }
 
+  /* Text File Window */
   #txtfile {
-    @apply w-md absolute top-36 right-32 bg-white shadow-2xl drop-shadow-2xl rounded-xl overflow-hidden;
+    @apply w-md absolute top-36 right-32 shadow-2xl rounded-none overflow-hidden;
+    border: 1px solid var(--kali-border);
+    background-color: #0d0e17;
 
     h2 {
       @apply font-bold text-sm text-center w-full;
+      color: var(--kali-text);
+      font-family: var(--font-roboto);
     }
   }
 
+  /* Image File Window */
   #imgfile {
-    @apply w-xl absolute top-40 left-2/12 bg-white shadow-2xl drop-shadow-2xl rounded-xl overflow-hidden;
+    @apply w-xl absolute top-40 left-2/12 shadow-2xl rounded-none overflow-hidden;
+    border: 1px solid var(--kali-border);
 
     #window-header {
       p {
-        @apply font-bold text-[#5f6266];
+        @apply font-bold;
+        color: var(--kali-text-dim);
+        font-family: var(--font-roboto);
       }
     }
 
     .preview {
-      @apply p-2 bg-gray-200 max-h-[70vh];
+      @apply p-2 max-h-[70vh];
+      background-color: #0d0e17;
 
       img {
         @apply w-full h-fit object-contain object-center;
@@ -376,6 +518,7 @@ body {
     }
   }
 
+  /* Desktop Icons */
   #home {
     @apply relative z-0 max-sm:hidden;
 
@@ -384,11 +527,22 @@ body {
         @apply absolute z-0 select-none flex items-center flex-col;
 
         img {
-          @apply group-hover:bg-gray-950/10 p-1 rounded-md;
+          @apply p-1 rounded-none;
+
+          &:hover {
+            background-color: rgba(54, 123, 240, 0.3);
+          }
         }
 
         p {
-          @apply text-sm text-white text-center px-1 rounded-md group-hover:bg-blue-500 transition-colors max-w-40;
+          @apply text-xs text-center px-1 rounded-none max-w-40;
+          color: var(--kali-text);
+          font-family: var(--font-roboto);
+
+          &:hover {
+            background-color: var(--kali-blue);
+            color: white;
+          }
         }
       }
     }
