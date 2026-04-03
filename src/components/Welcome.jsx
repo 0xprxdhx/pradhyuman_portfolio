@@ -1,92 +1,148 @@
-import { useRef } from "react";
+import { useRef, useEffect, useState } from "react";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
 
-const FONT_WEIGHT = {
-  subtitle: { min: 100, max: 400, default: 100 },
-  title: { min: 400, max: 900, default: 400 },
+const LINES = [
+  { prompt: "root@kali:~$", command: " whoami" },
+  { prompt: "root@kali:~$", command: " cat about.txt" },
+];
+
+const OUTPUT = [
+  "pradhyuman-singh-pancholi",
+  "> Full Stack Developer",
+  "> Open to work · Based in India",
+];
+
+const useTypewriter = (text, speed = 45, startDelay = 0) => {
+  const [displayed, setDisplayed] = useState("");
+  const [done, setDone] = useState(false);
+
+  useEffect(() => {
+    setDisplayed("");
+    setDone(false);
+
+    const timeout = setTimeout(() => {
+      let i = 0;
+      const interval = setInterval(() => {
+        setDisplayed(text.slice(0, i + 1));
+        i++;
+        if (i >= text.length) {
+          clearInterval(interval);
+          setDone(true);
+        }
+      }, speed);
+      return () => clearInterval(interval);
+    }, startDelay);
+
+    return () => clearTimeout(timeout);
+  }, [text, speed, startDelay]);
+
+  return { displayed, done };
 };
 
-const renderText = (text, className, baseWeight = 400) => {
-  return [...text].map((char, i) => (
-    <span
-      key={`${char}-${i}`}
-      className={className}
-      style={{ fontVariationSettings: `'wght' ${baseWeight}` }}
-    >
-      {char === " " ? "\u00A0" : char}
-    </span>
-  ));
-};
-
-const setupTextHover = (container, type) => {
-  if (!container) return () => {};
-
-  const letters = container.querySelectorAll("span");
-  const { min, max, default: base } = FONT_WEIGHT[type];
-
-  const animateLetters = (letter, weight, duration = 0.25) => {
-    return gsap.to(letter, {
-      duration,
-      ease: "power2.out",
-      fontVariationSettings: `'wght' ${weight}`,
-    });
-  };
-
-  const handleMouseMove = (e) => {
-    const { left } = container.getBoundingClientRect();
-    const mouseX = e.clientX - left;
-
-    letters.forEach((letter) => {
-      const { left: l, width: w } = letter.getBoundingClientRect();
-      const distance = Math.abs(mouseX - (l - left + w / 2));
-      const intensity = Math.exp(-(distance ** 2) / 20000);
-
-      animateLetters(letter, min + (max - min) * intensity);
-    });
-  };
-
-  const handleMouseLeave = () => {
-    letters.forEach((letter) => animateLetters(letter, base, 0.3));
-  };
-
-  container.addEventListener("mousemove", handleMouseMove);
-  container.addEventListener("mouseleave", handleMouseLeave);
-
-  return () => {
-    container.removeEventListener("mousemove", handleMouseMove);
-    container.removeEventListener("mouseleave", handleMouseLeave);
-  };
-};
+const Cursor = () => (
+  <span
+    className="inline-block w-2 h-4 ml-0.5 align-middle animate-pulse"
+    style={{ backgroundColor: "var(--kali-green)" }}
+  />
+);
 
 const Welcome = () => {
-  const titleRef = useRef(null);
-  const subtitleRef = useRef(null);
+  const wrapperRef = useRef(null);
 
+  // Line 1: whoami command
+  const line1 = useTypewriter(" whoami", 60, 300);
+  // Line 2: cat command — starts after line 1 + output delay
+  const line2 = useTypewriter(" cat about.txt", 60, 1800);
+  // Output lines staggered after line 2 types
+  const out1 = useTypewriter(OUTPUT[0], 40, 3200);
+  const out2 = useTypewriter(OUTPUT[1], 40, 4400);
+  const out3 = useTypewriter(OUTPUT[2], 40, 5000);
+
+  // Fade in the whole block
   useGSAP(() => {
-    const titleCleanup = setupTextHover(titleRef.current, "title");
-    const subtitleCleanup = setupTextHover(subtitleRef.current, "subtitle");
-
-    return () => {
-      titleCleanup?.();
-      subtitleCleanup?.();
-    };
+    gsap.fromTo(
+      wrapperRef.current,
+      { opacity: 0, y: 10 },
+      { opacity: 1, y: 0, duration: 0.6, ease: "power2.out", delay: 0.1 }
+    );
   }, []);
 
   return (
     <section id="welcome">
-      <p ref={subtitleRef}>
-        {renderText("Made by", "text-xl lg:text-2xl 3xl:text-3xl font-georama", 100)}
-      </p>
+      <div
+        ref={wrapperRef}
+        className="font-roboto text-sm lg:text-base space-y-2 w-full max-w-xl px-4"
+      >
+        {/* Line 1 — whoami */}
+        <div className="flex items-center gap-2">
+          <span style={{ color: "var(--kali-green)" }}>root@kali</span>
+          <span style={{ color: "var(--kali-text-dim)" }}>:</span>
+          <span style={{ color: "var(--kali-blue)" }}>~</span>
+          <span style={{ color: "var(--kali-text-dim)" }}>$</span>
+          <span style={{ color: "var(--kali-text)" }}>
+            {line1.displayed}
+            {!line1.done && <Cursor />}
+          </span>
+        </div>
 
-      <h1 ref={titleRef} className="mt-7">
-        {renderText("Pradhyuman", "text-6xl lg:text-8xl 3xl:text-9xl italic font-georama", 400)}
-      </h1>
+        {/* Output of whoami */}
+        {line1.done && (
+          <div
+            className="pl-1 text-lg lg:text-2xl font-bold tracking-tight"
+            style={{ color: "var(--kali-green)" }}
+          >
+            {out1.displayed}
+            {!out1.done && <Cursor />}
+          </div>
+        )}
 
+        {/* Line 2 — cat about.txt */}
+        {out1.done && (
+          <div className="flex items-center gap-2 mt-3">
+            <span style={{ color: "var(--kali-green)" }}>root@kali</span>
+            <span style={{ color: "var(--kali-text-dim)" }}>:</span>
+            <span style={{ color: "var(--kali-blue)" }}>~</span>
+            <span style={{ color: "var(--kali-text-dim)" }}>$</span>
+            <span style={{ color: "var(--kali-text)" }}>
+              {line2.displayed}
+              {!line2.done && <Cursor />}
+            </span>
+          </div>
+        )}
+
+        {/* Output of cat */}
+        {line2.done && (
+          <div className="pl-1 space-y-1">
+            <p style={{ color: "var(--kali-text-dim)" }}>
+              {out2.displayed}
+              {!out2.done && <Cursor />}
+            </p>
+            {out2.done && (
+              <p style={{ color: "var(--kali-text-dim)" }}>
+                {out3.displayed}
+                {!out3.done && <Cursor />}
+              </p>
+            )}
+          </div>
+        )}
+
+        {/* Final blinking cursor — idle terminal */}
+        {out3.done && (
+          <div className="flex items-center gap-2 mt-3">
+            <span style={{ color: "var(--kali-green)" }}>root@kali</span>
+            <span style={{ color: "var(--kali-text-dim)" }}>:</span>
+            <span style={{ color: "var(--kali-blue)" }}>~</span>
+            <span style={{ color: "var(--kali-text-dim)" }}>$</span>
+            <Cursor />
+          </div>
+        )}
+      </div>
+
+      {/* Small screen warning */}
       <div className="small-screen">
         <p>
-          At present, this portfolio is designed for desktop/tablet screens
-          only. An Android version will be launched soon.
+          This portfolio is optimized for desktop/tablet screens only.
         </p>
       </div>
     </section>
